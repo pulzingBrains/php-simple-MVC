@@ -1,0 +1,26 @@
+####################################################################################################
+# This is a example-file for a minimal configuration of apache2 with php & xdebug
+# To use this template copy the .env-file & this file to the root of your project and name it docker-compose.yml. 
+# Also, the .docker folder should be in the root directory of the project. 
+# If your project structure is different, please adjust the passed paths accordingly.
+#####################################################################################################
+#####################################################################################################
+
+version: 4.10.0
+
+services:
+    web:
+        build: .docker/web
+        container_name: php-simple-mvc_apache2-php7.4-xdebug
+        ports:
+            - 80:80
+        volumes:
+            - ./:/var/www/html
+            - .docker/web/docker-php-ext-xdebug-overrides.ini:/usr/local/etc/php/conf.d/docker-php-ext-xdebug-overrides.ini
+    
+    composer:
+        image: composer:latest
+        command: ["composer", "install"]
+        volumes:
+        - ./:/app
+        
