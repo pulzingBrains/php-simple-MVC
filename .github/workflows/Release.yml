@@ -1,0 +1,29 @@
+name: Release
+on:
+  push:
+    branches: [ main, dev ]
+
+jobs:
+  
+  call-workflow-phpunit:
+    strategy:
+      fail-fast: false
+      matrix:
+        php-version:
+          - "7.4"
+          # - "8.0"
+          # - "8.1"
+        dependency-version:
+          - "lowest"
+          - "highest"
+    uses: pulzingBrains/templates/.github/workflows/PHPUnit.yml@main
+    with:
+      php-version: ${{ matrix.php-version }}
+      dependency-version: ${{ matrix.dependency-version }}
+  
+  call-workflow-release:
+    needs: call-workflow-phpunit
+    uses: pulzingBrains/templates/.github/workflows/SemanticRelease.yml@main
+    secrets:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
